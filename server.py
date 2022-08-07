@@ -196,7 +196,7 @@ def load_data(index):
                     first_flag = False
                 print()
 
-            result[index] = process_data(each) # deal with data
+            result[index] = each # deal with data
 
             if data_dirs[index] == "battery":
                 _date,_time = result[index][0].split("+")[0].split("T")
