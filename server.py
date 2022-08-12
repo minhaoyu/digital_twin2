@@ -10,9 +10,11 @@ from threading import Thread
 import csv
 from flask_sqlalchemy import SQLAlchemy
 from http_sqlalchemy import Flask_SQL, SQLALCHEMY_DATABASE_URI
+from flask_cors import*
 
 # 初始化
 app = Flask(__name__)
+CORS(app,supports_credentials=True)
 db = SQLAlchemy()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
@@ -169,8 +171,8 @@ def load_data(index):
 
                 _date = _date.replace("-","/")
 
-                _date_time = to_time("1970/1/1 "+_time,"%Y/%m/%d %H:%M:%S")
-                cdate_time = to_time("1970/1/1 "+time.strftime("%H:%M:%S",time.localtime()),"%Y/%m/%d %H:%M:%S")
+                _date_time = to_time("1970/2/2 "+_time,"%Y/%m/%d %H:%M:%S")
+                cdate_time = to_time("1970/2/2 "+time.strftime("%H:%M:%S",time.localtime()),"%Y/%m/%d %H:%M:%S")
 
                 # print("cdate_time",cdate_time)
                 # print("_date_time",_date_time)
@@ -181,7 +183,7 @@ def load_data(index):
 
                     while _date_time > cdate_time:
                         time.sleep(0.5)
-                        cdate_time = to_time("1970/1/1 "+time.strftime("%H:%M:%S",time.localtime()),"%Y/%m/%d %H:%M:%S")
+                        cdate_time = to_time("1970/2/2 "+time.strftime("%H:%M:%S",time.localtime()),"%Y/%m/%d %H:%M:%S")
                         # print("cdate_time",cdate_time)
                         # print("_date_time",_date_time)
 
