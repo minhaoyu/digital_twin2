@@ -7,13 +7,13 @@ import requests
 
 jdata = {
     "method": "single time",
-    "folder": "Bldng_049",
-    "time": "02:14:00",
+    "folder": "bldng_049",
+    "time": "02:14:00"
     #"time1": "02:14:00",
     #"time2": "02:16:00",
-    #"date": "2021/03/10",
-    #"date1": "2021/03/10",
-    #"date2": "2021/03/11",
+    #"date": "2021-03-10",
+    #"date1": "2021-03-10",
+    #"date2": "2021-03-11",
 }
 
 up = []

@@ -70,7 +70,8 @@ def _filter():
             for row in ids:
                 try:
                     date, _time = row.date_time.__str__().split(" ")
-                    if check_middle(to_time(_time, "%H:%M:%S"), to_time(jdata["time1"], "%H:%M:%S"),
+                    if check_middle(to_time(_time, "%H:%M:%S"),
+                                    to_time(jdata["time1"], "%H:%M:%S"),
                                     to_time(jdata["time2"], "%H:%M:%S")):
                         data = sql_editer.fetch_one(Commands.get_datas.format(jdata["folder"]), {"id": row.id})
                         result.append(data)
@@ -130,7 +131,7 @@ def _filter():
             "end": jdata["datetime2"],
         })
 
-    result = [to_jsonable(each) for each in result]
+    result = to_jsonable([dict(each) for each in result])
     return jsonify(result)
 
 @app.route("/max_min")
@@ -154,3 +155,4 @@ if __name__ == "__main__":
         808,
         debug=False,
     )
+
