@@ -1,14 +1,14 @@
 get_datas = """
-select * from `digital_twin`.{}
+select * from {}
 where id=:id
 """
 
 get_ids = """
-select `id` from `digital_twin`.{}
+select `id` from {}
 """
 
 create_table = """
-create table `digital_twin`.`{}`(
+create table `{}`(
     `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `date` date NOT NULL,
     `time` time NOT NULL,
@@ -20,12 +20,12 @@ create table `digital_twin`.`{}`(
 """
 
 insert_other_data = """
-insert into `digital_twin`.`{}`(`date`,`time`,`pv_w`,`pv_wh`,`date_time`)
+insert into `{}`(`date`,`time`,`pv_w`,`pv_wh`,`date_time`)
 values(:date,:time,:pv_w,:pv_wh,:date_time);
 """
 
 insert_battery_data = """
-insert into `digital_twin`.`battery`(
+insert into `battery`(
 `measurement_time`,
 `FCAS_Event`,
 `full_charge_energy`,
@@ -79,6 +79,6 @@ values(
 :date_time);
 """
 get_datas_order = """
-select * from `digital_twin`.{}
+select * from {}
 order by {} {},date_time desc
 """

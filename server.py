@@ -8,11 +8,11 @@ print("gvar.root",gvar.root)
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from http_sqlalchemy import Flask_SQL, SQLALCHEMY_DATABASE_URI
-from flask_cors import*
+# from flask_cors import*
 
 # Initialize
 app = Flask(__name__)
-CORS(app,supports_credentials=True)
+# CORS(app,supports_credentials=True)
 db = SQLAlchemy()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
@@ -29,6 +29,9 @@ from utils import *
 
 import serv_tools as serv_tools
 import Commands
+
+from api_2022_9_22 import _2022_9_22_bp
+app.register_blueprint(_2022_9_22_bp)
 
 def realtime_read_data(name):
     if name == "battery":
