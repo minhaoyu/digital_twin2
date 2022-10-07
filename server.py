@@ -1,4 +1,7 @@
 import sys, os
+
+from flask_cors import CORS
+
 sys.path.insert(0, "cores")
 
 import gvar as gvar
@@ -12,7 +15,7 @@ from http_sqlalchemy import Flask_SQL, SQLALCHEMY_DATABASE_URI
 
 # Initialize
 app = Flask(__name__)
-# CORS(app,supports_credentials=True)
+CORS(app,supports_credentials=True)
 db = SQLAlchemy()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
@@ -52,7 +55,7 @@ def index():
 def _filter():
     result = []
     jdata = request.json
-    pprint(jdata)
+    pprint(request)
 
     if jdata["folder"].casefold() not in gvar.bldngs and jdata["folder"].casefold() != "battery":
         return jsonify({"message": "no this folder！"})

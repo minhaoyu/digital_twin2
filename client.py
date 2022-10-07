@@ -21,8 +21,8 @@ up = []
 while True:
     try:
 
-        # result = requests.get("http://127.0.0.1:808/filter", json=jdata).json()
-        # pprint(result)
+        result = requests.get("http://127.0.0.1:808/filter", json=jdata).json()
+        pprint(result)
         datas = requests.get("http://localhost:808").json()
         if datas == up:
             continue
