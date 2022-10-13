@@ -51,11 +51,11 @@ serv_tools.check_dir_change()
 def index():
     return jsonify(to_jsonable(gvar.realtime_result))
 
-@app.route("/filter")
+@app.route("/filter",methods=["POST"])
 def _filter():
     result = []
     jdata = request.json
-    pprint(request)
+    pprint(jdata)
 
     if jdata["folder"].casefold() not in gvar.bldngs and jdata["folder"].casefold() != "battery":
         return jsonify({"message": "no this folder！"})
@@ -137,7 +137,12 @@ def _filter():
             "end": jdata["datetime2"],
         })
 
-    result = to_jsonable([dict(each) for each in result])
+    temp = to_jsonable([dict(each) for each in result])
+    result = []
+    if jdata["folder"] != "battery":
+        for each in temp:
+            result.append(serv_tools.process_data(each,"k"))
+
     return jsonify(result)
 
 @app.route("/max_min")

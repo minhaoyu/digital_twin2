@@ -45,26 +45,26 @@ def mean():
     folder = request.json.get("folder")
     fields = request.json.get("fields")
     pprint(request.json)
-    # 检测四个参数是否都有数据
+    # test parameter
     if not (start and end and folder and fields):
-        return "缺少参数！"
+        return "missing parameter！"
 
-    # 检测数据格式
-    # 时间
+    # test data formate
+    # time
     time_format = re.compile(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}")
 
     try:
         start = time_format.match(start).group()
     except:
-        return "start 格式错误！"
+        return "start wrong formate！"
 
     try:
         end = time_format.match(end).group()
     except:
-        return "end 格式错误！"
+        return "end wrong formate！"
 
     if not isinstance(fields,list):
-        return "fields 格式错误！"
+        return "fields wrong formate！"
 
     result = {
         "mean":{},
@@ -90,26 +90,26 @@ def min_max():
     folder = request.json.get("folder")
     fields = request.json.get("fields")
 
-    # 检测四个参数是否都有数据
+    # test parameter
     if not (start and end and folder and fields):
-        return "缺少参数！"
+        return "missing parameter！"
 
-    # 检测数据格式
-    # 时间
+    # test data formate
+    # time
     time_format = re.compile(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}")
 
     try:
         start = time_format.match(start).group()
     except:
-        return "start 格式错误！"
+        return "start wrong formate！"
 
     try:
         end = time_format.match(end).group()
     except:
-        return "end 格式错误！"
+        return "end wrong formate！"
 
     if not isinstance(fields,list):
-        return "fields 格式错误！"
+        return "fields wrong formate！"
 
     result = {
         "max":{},
@@ -141,41 +141,41 @@ def table():
     interval = request.json.get("interval")
     print(request.json)
 
-    # 检测四个参数是否都有数据
+    # test parameter
     if not (start and end and folder and method and fields and interval):
-        return "缺少参数！"
+        return "missing parameter！"
 
-    # 检测数据格式
-    # 时间
+    # test data formate
+    # time
     time_format = re.compile(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}")
 
     try:
         start = time_format.match(start).group()
     except:
-        return "start 格式错误！"
+        return "start wrong formate！"
 
     try:
         end = time_format.match(end).group()
     except:
-        return "end 格式错误！"
+        return "end wrong formate！"
 
     if not isinstance(fields,list):
-        return "fields 格式错误！"
+        return "fields wrong formate！"
 
     table_request_methods = ["avg", "min", "max"]
     if method.casefold() not in table_request_methods:
-        return "method 不存在！"
+        return "method doesn't exist！"
 
     frequency = ["minute","hour","day","week", "month","quarter"]
     if interval.casefold() not in frequency:
-        return "interval 不存在！"
+        return "interval doesn't exist！"
 
     result = {
 
     }
 
-    # 根据 interval 参数过滤数据
-    # 参数： 时间格式化表达式，方法，字段，库
+    # filter the data
+    # parameter： time，method，string，table
     if interval == "minute":
         for field in fields:
             result[field] = sql_editer.fetch_all(Commands.get_data_by_.format("%Y-%m-%d %H:%i",method,field,folder), {
@@ -228,13 +228,13 @@ def table():
             } for each in result[field]]
 
 
-    # 转换成图表格式
+    # transfer to diagram format
     result1 = {"date_time":[]}
-    # 获取单个字段总数据条数，因为筛选方法与分组方法相同所以每一个字段的条数和数据位置都是一样的
+    # get single string total value
     for i in range(len(result[fields[0]])):
-        # 将其中一个字段当前条数记录的时间加入到结果中
+        # add the time to the result
         result1["date_time"].append(result[fields[0]][i]["datetime"])
-        # 将每个字段的数据逐个添加到结果中
+        # store data to the result
         for field in fields:
             if result1.get(field):
                 if folder == "battery":

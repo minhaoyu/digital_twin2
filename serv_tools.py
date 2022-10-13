@@ -145,7 +145,17 @@ def check_dir_change():
     thread.start()
     gvar.threads.append(thread)
 
-def process_data(data):
+def process_data(data,method=None):
+    data = deepcopy(data)
+    if method == "k":
+        print(data)
+        if isinstance(data,list):
+            data[2] = "%.2f" % (float(data[2]) / 1000)
+            data[3] = "%.2f" % (float(data[3]) / 1000)
+        elif isinstance(data,dict):
+            data['pv_w'] = "%.2f" % (float(data['pv_w']) / 1000)
+            data['pv_wh'] = "%.2f" % (float(data['pv_wh']) / 1000)
+
     return data
 
 if __name__ == '__main__':
