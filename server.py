@@ -142,7 +142,8 @@ def _filter():
     if jdata["folder"] != "battery":
         for each in temp:
             result.append(serv_tools.process_data(each,"k"))
-
+    else:
+        return jsonify(temp)
     return jsonify(result)
 
 @app.route("/max_min")

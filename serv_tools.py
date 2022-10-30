@@ -4,6 +4,7 @@ import gvar
 
 sql_editer = gvar.sql_editer
 
+
 # create tables
 def create_datatables():
     new_bldngs = [
@@ -20,10 +21,12 @@ def create_datatables():
             except:
                 pass
 
+
 def add_new_thread(name):
     gvar.realtime_result["datas"][name] = {}
     gvar.threads.append(Thread(target=gvar.realtime_read_data, args=(name,)))
     gvar.threads[-1].start()
+
 
 def add_new_data(paths):
     start = []
@@ -46,13 +49,14 @@ def add_new_data(paths):
     for each in start:
         add_new_thread(each)
 
+
 def _calculate_mean_value_battery(date):
     print("calculate_mean_value_battery")
     result = []
     battery_path = os.path.join(gvar.root, "battery")
 
     for file in os.listdir(battery_path):
-        path = os.path.join(battery_path,file)
+        path = os.path.join(battery_path, file)
         # print(path)
         with open(path, "r") as file:
             csv_reader = csv.reader(file)
@@ -78,6 +82,7 @@ def _calculate_mean_value_battery(date):
     # for key,value in gvar.realtime_result["mean_value"]["battery"].items():
     #     print(key,": ",value)
 
+
 def _calculate_mean_value_bldng(date):
     print("calculate_mean_value_bldng")
     for bldng in gvar.bldngs:
@@ -97,7 +102,7 @@ def _calculate_mean_value_bldng(date):
                         result.append(each)
 
         gvar.realtime_result["mean_value"][bldng] = {}
-        for i in range(2,len(result[0])):
+        for i in range(2, len(result[0])):
             gvar.realtime_result["mean_value"][bldng][headers[i]] = 0
             for each in result:
                 try:
@@ -107,19 +112,21 @@ def _calculate_mean_value_bldng(date):
             else:
                 gvar.realtime_result["mean_value"][bldng][headers[i]] /= len(result)
 
-
         # for key, value in gvar.realtime_result["mean_value"][bldng].items():
         #     print(key, ": ", value)
+
 
 def calculate_mean_value_battery(date):
     thread = Thread(target=_calculate_mean_value_battery, args=(date,))
     thread.start()
     gvar.threads.append(thread)
 
+
 def calculate_mean_value_bldng(date):
     thread = Thread(target=_calculate_mean_value_bldng, args=(date,))
     thread.start()
     gvar.threads.append(thread)
+
 
 def _check_dir_change():
     while True:
@@ -140,23 +147,26 @@ def _check_dir_change():
 
         sleep(0.5)
 
+
 def check_dir_change():
     thread = Thread(target=_check_dir_change)
     thread.start()
     gvar.threads.append(thread)
 
-def process_data(data,method=None):
+
+def process_data(data, method=None):
     data = deepcopy(data)
     if method == "k":
         print(data)
-        if isinstance(data,list):
+        if isinstance(data, list):
             data[2] = "%.2f" % (float(data[2]) / 1000)
             data[3] = "%.2f" % (float(data[3]) / 1000)
-        elif isinstance(data,dict):
+        elif isinstance(data, dict):
             data['pv_w'] = "%.2f" % (float(data['pv_w']) / 1000)
             data['pv_wh'] = "%.2f" % (float(data['pv_wh']) / 1000)
 
     return data
+
 
 if __name__ == '__main__':
     print(os.getcwd())
@@ -166,4 +176,3 @@ if __name__ == '__main__':
 
     for each in gvar.threads:
         each.join()
-

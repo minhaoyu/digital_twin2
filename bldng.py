@@ -75,9 +75,20 @@ def calc_max_min(bldng):
 def realtime_read_data(name):
     first = True
     for i,value in enumerate(gvar.datas[name],1):
+        kwargs = {
+            "date": value[0],
+            "time": value[1],
+            "pv_w": value[2] if value[2] else 0,
+            "pv_wh": value[3] if value[3] else 0,
+            "date_time": f'{value[0]} {value[1]}'
+        }
+
+        sql = Commands.insert_other_data.format(name)
+        sql_editer.execute(sql, kwargs)
+
         # get the time of this data
         _date, _time = value[0], value[1]
-        _date = _date.replace("-", "/")  # date formalize
+        _date = _date.replace("-", "/")  # date formate
         if gvar.first < 2 and first:
             gvar.modify_max_min_flag[name] = False
             _date_time = to_time("1970/1/2 " + _time, "%Y/%m/%d %H:%M:%S")  # format the date
@@ -108,19 +119,9 @@ def realtime_read_data(name):
             gvar.date[name] = _date
             serv_tools.calculate_mean_value_bldng(_date)
 
-        kwargs = {
-            "date": value[0],
-            "time": value[1],
-            "pv_w": value[2] if value[2] else 0,
-            "pv_wh": value[3] if value[3] else 0,
-            "date_time": f'{value[0]} {value[1]}'
-        }
-
         gvar.temp_compare_mean_values[name] = kwargs
-        sql = Commands.insert_other_data.format(name)
-        sql_editer.execute(sql, kwargs)
 
-        # After processing give the value to real time data
+        # deal with data
         gvar.realtime_result["datas"][name] = serv_tools.process_data(value,"k")
         print(gvar.realtime_result["datas"][name])
 

@@ -7,7 +7,7 @@ import requests
 
 jdata = {
     "method": "single time",
-    "folder": "bldng_049",
+    "folder": "battery",
     "time": "02:14:00"
     #"time1": "02:14:00",
     #"time2": "02:16:00",
@@ -21,7 +21,7 @@ up = []
 while True:
     try:
 
-        result = requests.get("http://127.0.0.1:808/filter", json=jdata).json()
+        result = requests.post("http://127.0.0.1:808/filter", json=jdata).json()
         pprint(result)
         datas = requests.get("http://localhost:808").json()
         if datas == up:
