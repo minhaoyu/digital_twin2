@@ -5,17 +5,19 @@ from flask_cors import CORS
 sys.path.insert(0, "cores")
 
 import gvar as gvar
+
 gvar.root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
-print("gvar.root",gvar.root)
+print("gvar.root", gvar.root)
 
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from http_sqlalchemy import Flask_SQL, SQLALCHEMY_DATABASE_URI
+
 # from flask_cors import*
 
 # Initialize
 app = Flask(__name__)
-CORS(app,supports_credentials=True)
+CORS(app, supports_credentials=True)
 db = SQLAlchemy()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
@@ -34,7 +36,9 @@ import serv_tools as serv_tools
 import Commands
 
 from api_2022_9_22 import _2022_9_22_bp
+
 app.register_blueprint(_2022_9_22_bp)
+
 
 def realtime_read_data(name):
     if name == "battery":
@@ -42,16 +46,19 @@ def realtime_read_data(name):
     else:
         bldng.realtime_read_data(name)
 
+
 gvar.realtime_read_data = realtime_read_data
 
 serv_tools.create_datatables()
 serv_tools.check_dir_change()
 
+
 @app.route("/")
 def index():
     return jsonify(to_jsonable(gvar.realtime_result))
 
-@app.route("/filter",methods=["POST"])
+
+@app.route("/filter", methods=["POST"])
 def _filter():
     result = []
     jdata = request.json
@@ -98,7 +105,7 @@ def _filter():
         result = sql_editer.fetch_all("""
         select * from `digital_twin`.{}
         where `date_time` between :begin and :end
-        """.format(jdata["folder"]),{
+        """.format(jdata["folder"]), {
             "begin": jdata["date1"] + " 00:00:00",
             "end": jdata["date2"] + " 23:59:59",
         })
@@ -108,8 +115,8 @@ def _filter():
             result = sql_editer.fetch_all("""
             select * from `digital_twin`.`{}`
             where `date_time`=:date_time
-            """.format(jdata["folder"]),{
-                "date_time":jdata["datetime"],
+            """.format(jdata["folder"]), {
+                "date_time": jdata["datetime"],
             })
         except:
             pass
@@ -132,7 +139,7 @@ def _filter():
         result = sql_editer.fetch_all("""
         select * from `digital_twin`.`{}`
         where `date_time` between :begin and :end
-        """.format(jdata["folder"]),{
+        """.format(jdata["folder"]), {
             "begin": jdata["datetime1"],
             "end": jdata["datetime2"],
         })
@@ -141,10 +148,11 @@ def _filter():
     result = []
     if jdata["folder"] != "battery":
         for each in temp:
-            result.append(serv_tools.process_data(each,"k"))
+            result.append(serv_tools.process_data(each, "k"))
     else:
         return jsonify(temp)
     return jsonify(result)
+
 
 @app.route("/max_min")
 def max_min():
@@ -155,10 +163,10 @@ def max_min():
         pprint(gvar.max_min)
         return jsonify(gvar.max_min)
 
+
 @app.route("/test")
 def test():
     return jsonify(to_jsonable(gvar.temp_compare_mean_values))
-
 
 
 if __name__ == "__main__":
@@ -167,4 +175,3 @@ if __name__ == "__main__":
         808,
         debug=False,
     )
-
